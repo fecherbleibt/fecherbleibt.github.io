@@ -1,0 +1,35 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kruppstraße (U4/U7)",
+        "offsetX": -110,
+        "offsetY": 0 
+      },
+      "geometry": {
+        "coordinates": [
+          8.744467725458378,
+          50.13792903863376
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hessen-Center (U4/U7)",
+        "offsetX": -80,
+        "offsetY": -25
+      },
+      "geometry": {
+        "coordinates": [
+          8.749092266705446,
+          50.14050698839458
+        ],
+        "type": "Point"
+      }
+    }
+  ]
+}

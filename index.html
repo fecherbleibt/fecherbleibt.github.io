@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fecher Aktionskarte</title>
+   
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.2.2/ol.css">
+</head>
+
+<body>
+
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js"></script>
+  
+<div style="margin-left:10px;">
+    <h2>Aktionskarte Fecher</h2>
+    <button id="show_location">aktuellen Standort anzeigen</button>
+    <button id="show_fecher">zum Fecher springen</button><br>
+    ermittelte Koorindaten: 
+    <label style="color:red" id="coordinates"/></label><br>
+    Hinweise:<br>
+    - der geplante Riederwaldtunnel ist rot-weiß eingezeichnet<br>
+    - <a href="https://www.youtube.com/embed/lDbAWbr4mQM">Drohnenaufnahme vom Pilger</a><br>
+    - <a href="./static/02 A66_Riederwald_Anlage1_Übersicht_1zu2000_Heldbock.pdf">Gutachten mit alternativer Baustaße (pdf)</a><br>
+</div>
+
+<div id="mapContainer" class="100 w-100">
+    <div id="map"></div>
+</div>
+
+<script>
+    const coordinates_fecher = [973792.4974231947, 6469855.034620823];
+
+    window.onload = init;
+    view = new ol.View({
+        center: coordinates_fecher,
+        zoom: 16,
+        maxZoom: 20,
+        minZoom: 14,
+    })
+
+    function init() {
+        const map = new ol.Map({
+            view: view,
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                })
+            ],
+            target: "map",
+        })
+
+        map.on("click", function(e){
+            console.log(e.coordinate);
+        })
+
+        // BEGIN U-BAHN STATIONEN
+        const geo_ubahn = new ol.layer.VectorImage({
+            source: new ol.source.Vector({
+                url: "./static/geodata-ubahn.json",
+                format: new ol.format.GeoJSON(),
+            }),
+            style: function (feature, resolution) {
+              //console.log(feature.getProperties());
+              return [new ol.style.Style({
+                //image: new ol.style.Circle({
+                //  radius: 13,
+                //  fill: new ol.style.Fill({ color: "#0079F2" })
+                //}),
+                image: new ol.style.Icon({
+                    width: 22,
+                    height: 22,
+                    src: './static//ubahn.png',
+                }),
+                text: new ol.style.Text({text: feature.get("name"),
+                                         font: "bold 16px serif",
+                                         fill: new ol.style.Fill({ color: "#0079F2" }),
+                                         offsetX: feature.get("offsetX"),
+                                         offsetY: feature.get("offsetY"),
+
+                })
+              })];
+            },
+            title: "U-Bahn Stationen",
+        })
+        map.addLayer(geo_ubahn);
+        // END U-BAHN STATIONEN
+
+
+        // BEGIN BAUWAGEN
+        const geo_bauwagen = new ol.layer.VectorImage({
+            source: new ol.source.Vector({
+                url: "./static/geodata-bauwagen.json",
+                format: new ol.format.GeoJSON(),
+            }),
+            style: function (feature, resolution) {
+              return [new ol.style.Style({
+                image: new ol.style.Circle({
+                  radius: 7,
+                  fill: new ol.style.Fill({ color: "#000000" })
+                }),
+                text: new ol.style.Text({
+                    text: "Bauwagen/Mahnwache",
+                    font: "bold 16px serif",
+                    offsetX: -90,
+                    offsetY: -20
+                })
+              })];
+            },
+            title: "Bauwagen",
+        })
+        map.addLayer(geo_bauwagen);
+        // END BAUWAGEN
+        
+        
+        // BEGIN Baustelle
+        const geo_baustelle = new ol.layer.VectorImage({
+            source: new ol.source.Vector({
+                url: "./static/geodata-baustelle.json",
+                format: new ol.format.GeoJSON(),
+            }),
+            style: function (feature, resolution) {
+              return [new ol.style.Style({
+                fill: new ol.style.Fill({ color: 'rgba(255,165,0, 0.73)'}),
+                stroke: new ol.style.Stroke({   color : '#000000',    width : 2  }),
+                text: new ol.style.Text({
+                    text: "Baustelle",
+                    font: "bold 16px serif",
+                    rotation: 200,
+                    overflow: true,
+                    offsetX: 100,
+                    offsetY: 5, 
+                })
+              })];
+            },
+            title: "Baustelle",
+        })
+        map.addLayer(geo_baustelle);
+        // END Baustelle
+        
+        
+        // BEGIN GRÜNE FLÄCHEN
+        const geo_greens = new ol.layer.VectorImage({
+            source: new ol.source.Vector({
+                url: "/static/geodata-wald.json",
+                format: new ol.format.GeoJSON(),
+            }),
+            style: function (feature, resolution) {
+              //console.log(feature.getProperties());
+              return [new ol.style.Style({
+                image: new ol.style.Circle({
+                  radius: 7,
+                  fill: new ol.style.Fill({ color: "#CD853F" })
+                }),
+                text: new ol.style.Text({text: feature.get("name"),
+                                         font: "bold 16px serif",
+                                         fill: new ol.style.Fill({ color: "#CD853F"}),
+                                         rotation: feature.get("rotation"),
+                                         offsetX: feature.get("offsetX"),
+                                         offsetY: feature.get("offsetY"),
+
+                })
+              })];
+            },
+            title: "Grünflächen",
+        })
+        map.addLayer(geo_greens);
+        // END GRÜNE FLÄCHEN
+
+
+const geolocation = new ol.Geolocation({
+  trackingOptions: {
+    enableHighAccuracy: true,
+  },
+  projection: view.getProjection(),
+});
+
+
+// handle geolocation error.
+geolocation.on('error', function (error) {
+  console.log(error.message);
+});
+
+const accuracyFeature = new ol.Feature();
+geolocation.on('change:accuracyGeometry', function () {
+  accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
+});
+
+const positionFeature = new ol.Feature();
+positionFeature.setStyle(
+  new ol.style.Style({
+    image: new ol.style.Circle({
+      radius: 6,
+      fill: new ol.style.Fill({
+        color: '#3399CC',
+      }),
+      stroke: new ol.style.Stroke({
+        color: '#fff',
+        width: 2,
+      }),
+      text: new ol.style.Text({
+        test: "strange",
+          overflow: true,
+      }),
+    }),
+  })
+);
+
+document.getElementById("show_location").addEventListener("click", function() {
+  geolocation.setTracking(true);
+  var coordinates = geolocation.getPosition();
+  console.log(coordinates);
+  document.getElementById("coordinates").textContent = coordinates ? coordinates : "Fehler, bitte nochmal probieren";
+  positionFeature.setGeometry(coordinates ? new ol.geom.Point(coordinates) : null);
+  map.getView().setCenter(coordinates);
+});
+
+document.getElementById("show_fecher").addEventListener("click", function() {
+  map.getView().setCenter(coordinates_fecher);
+  document.getElementById("coordinates").textContent = coordinates_fecher;
+});
+
+new ol.layer.Vector({
+  map: map,
+  source: new ol.source.Vector({
+    features: [accuracyFeature, positionFeature],
+  }),
+});
+
+}
+
+</script>
+
+<style>
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      position:fixed;
+    }
+</style>
+
+</body>
+</html>

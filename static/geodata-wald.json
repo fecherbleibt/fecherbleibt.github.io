@@ -1,0 +1,37 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Fechenheimer Wald",
+        "offsetX": 0,
+        "offsetY": -35,
+        "rotation": 0
+      },
+      "geometry": {
+        "coordinates": [
+          8.75317958101266,
+          50.13680152919849
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Teufelsbruch",
+        "offsetX": 70,
+        "offsetY": 0,
+        "rotation": 5.6
+      },
+      "geometry": {
+        "coordinates": [
+          8.745083480848365,
+          50.13375777185985
+        ],
+        "type": "Point"
+      }
+    }
+  ]
+}
