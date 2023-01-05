@@ -144,7 +144,7 @@
         // BEGIN GRÜNE FLÄCHEN
         const geo_greens = new ol.layer.VectorImage({
             source: new ol.source.Vector({
-                url: "/static/geodata-wald.json",
+                url: "./static/geodata-wald.json",
                 format: new ol.format.GeoJSON(),
             }),
             style: function (feature, resolution) {
@@ -168,6 +168,60 @@
         })
         map.addLayer(geo_greens);
         // END GRÜNE FLÄCHEN
+        
+
+	// BEGIN RODUNGSBEREICH
+        const geo_rodung = new ol.layer.VectorImage({
+            source: new ol.source.Vector({
+                url: "./static/geodata-rodungsbereich.json",
+                format: new ol.format.GeoJSON(),
+            }),
+            style: function (feature, resolution) {
+              //console.log(feature.getProperties());
+              return [new ol.style.Style({
+                fill: new ol.style.Fill({ color: 'rgba(255,0,0, 0.73)'}),
+                //text: new ol.style.Text({text: "Rodungsbereich",
+                 //                        font: "bold 16px serif",
+                  //                       fill: new ol.style.Fill({ color: "#000000"}),
+		//			 overflow: true,
+                                         //rotation: feature.get("rotation"),
+                                         //offsetX: feature.get("offsetX"),
+                                         //offsetY: feature.get("offsetY"),
+
+                //})
+              })];
+            },
+            title: "Rodungsbereich",
+        })
+        map.addLayer(geo_rodung);
+        // END RODUNGSBEREICH
+	
+
+	// BEGIN SPERRZONE
+        const geo_sperrzone = new ol.layer.VectorImage({
+            source: new ol.source.Vector({
+                url: "./static/geodata-sperrzone.json",
+                format: new ol.format.GeoJSON(),
+            }),
+            style: function (feature, resolution) {
+              //console.log(feature.getProperties());
+              return [new ol.style.Style({
+                fill: new ol.style.Fill({ color: 'rgba(255,20,147,0.63)'}),
+                //text: new ol.style.Text({text: "Rodungsbereich",
+                 //                        font: "bold 16px serif",
+                  //                       fill: new ol.style.Fill({ color: "#000000"}),
+		//			 overflow: true,
+                                         //rotation: feature.get("rotation"),
+                                         //offsetX: feature.get("offsetX"),
+                                         //offsetY: feature.get("offsetY"),
+
+                //})
+              })];
+            },
+            title: "Sperrzone",
+        })
+        map.addLayer(geo_sperrzone);
+        // END SEPRRZONE
 
 
 const geolocation = new ol.Geolocation({
