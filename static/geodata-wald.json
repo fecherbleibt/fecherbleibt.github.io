@@ -56,14 +56,14 @@
      "type": "Feature",
      "properties": {
         "name": "Rodungsbereich",
-        "offsetX": 0,
-        "offsetY": -15,
+        "offsetX": 12,
+        "offsetY": -12,
         "rotation": 5.6,
         "color" : "#000000"
       },
      "geometry": {
        "coordinates": [
-         8.747655755446743,
+         8.747200755446743,
          50.137600017729406
        ],
        "type": "Point"
