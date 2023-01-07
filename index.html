@@ -123,7 +123,7 @@
             }),
             style: function (feature, resolution) {
               return [new ol.style.Style({
-                fill: new ol.style.Fill({ color: 'rgba(255,165,0, 0.73)'}),
+                fill: new ol.style.Fill({ color: 'rgba(192, 192, 192, 0.73)'}),
                 stroke: new ol.style.Stroke({   color : '#000000',    width : 2  }),
                 text: new ol.style.Text({
                     text: "Baustelle",
@@ -148,15 +148,14 @@
                 format: new ol.format.GeoJSON(),
             }),
             style: function (feature, resolution) {
-              //console.log(feature.getProperties());
               return [new ol.style.Style({
                 image: new ol.style.Circle({
-                  radius: 7,
-                  fill: new ol.style.Fill({ color: "#CD853F" })
+                  radius: 5,
+                  fill: new ol.style.Fill({ color: feature.get("color")})
                 }),
                 text: new ol.style.Text({text: feature.get("name"),
                                          font: "bold 16px serif",
-                                         fill: new ol.style.Fill({ color: "#CD853F"}),
+                                         fill: new ol.style.Fill({ color: feature.get("color")}),
                                          rotation: feature.get("rotation"),
                                          offsetX: feature.get("offsetX"),
                                          offsetY: feature.get("offsetY"),
@@ -177,24 +176,14 @@
                 format: new ol.format.GeoJSON(),
             }),
             style: function (feature, resolution) {
-              //console.log(feature.getProperties());
               return [new ol.style.Style({
                 fill: new ol.style.Fill({ color: 'rgba(255,0,0, 0.73)'}),
-                //text: new ol.style.Text({text: "Rodungsbereich",
-                 //                        font: "bold 16px serif",
-                  //                       fill: new ol.style.Fill({ color: "#000000"}),
-		//			 overflow: true,
-                                         //rotation: feature.get("rotation"),
-                                         //offsetX: feature.get("offsetX"),
-                                         //offsetY: feature.get("offsetY"),
-
-                //})
               })];
             },
             title: "Rodungsbereich",
         })
         map.addLayer(geo_rodung);
-        // END RODUNGSBEREICH
+    // END RODUNGSBEREICH
 	
 
 	// BEGIN SPERRZONE
@@ -204,24 +193,55 @@
                 format: new ol.format.GeoJSON(),
             }),
             style: function (feature, resolution) {
-              //console.log(feature.getProperties());
               return [new ol.style.Style({
-                fill: new ol.style.Fill({ color: 'rgba(255,20,147,0.63)'}),
-                //text: new ol.style.Text({text: "Rodungsbereich",
-                 //                        font: "bold 16px serif",
-                  //                       fill: new ol.style.Fill({ color: "#000000"}),
-		//			 overflow: true,
-                                         //rotation: feature.get("rotation"),
-                                         //offsetX: feature.get("offsetX"),
-                                         //offsetY: feature.get("offsetY"),
-
-                //})
+                fill: new ol.style.Fill({ color: 'rgba(255, 153, 51, 0.63)'}),
               })];
             },
             title: "Sperrzone",
         })
         map.addLayer(geo_sperrzone);
-        // END SEPRRZONE
+    // END SEPRRZONE
+	
+    // BEGIN Baustraßen
+        const geo_baustrassen = new ol.layer.VectorImage({
+            source: new ol.source.Vector({
+                url: "./static/geodata-baustraße.json",
+                format: new ol.format.GeoJSON(),
+            }),
+            style: function (feature, resolution) {
+              return [new ol.style.Style({
+                stroke : new ol.style.Stroke({color : "gold", "width": 6}),
+                text: new ol.style.Text({text: "Baustraße",
+                                         font: "13px serif",
+                                         fill: new ol.style.Fill({ color: "black"}),
+                                         offsetX: feature.get("offsetX"),
+                                         offsetY: feature.get("offsetY")}),
+              })]},
+            title: "Baustraßen",
+        })
+        map.addLayer(geo_baustrassen);
+    // END Baustraßen
+	
+        
+    // BEGIN Heldbock
+        const geo_heldbock = new ol.layer.VectorImage({
+            source: new ol.source.Vector({
+                url: "./static/geodata-heldbock.json",
+                format: new ol.format.GeoJSON(),
+            }),
+            style: function (feature, resolution) {
+              return [new ol.style.Style({
+                fill: new ol.style.Fill({ color: 'rgba(128, 255, 0, 0.63)'}),
+                image: new ol.style.Circle({
+                  radius: 8,
+                  fill: new ol.style.Fill({ color: 'rgba(128, 255, 0, 0.93)'})
+                }),
+              })];
+            },
+            title: "Heldbock",
+        })
+        map.addLayer(geo_heldbock);
+    // END Heldbock
 
 
 const geolocation = new ol.Geolocation({
