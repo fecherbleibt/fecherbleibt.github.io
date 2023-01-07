@@ -21,7 +21,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Sperrzone",
+        "name": "Sicherheitsbereich",
         "offsetX": 0,
         "offsetY": -25,
         "rotation": 0,
